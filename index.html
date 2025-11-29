@@ -16,6 +16,7 @@
             --code-text: #f8f8f2; /* Light text */
             --code-comment: #6a9955; /* Green for comments */
             --code-command: #569cd6; /* Blue for commands */
+            --code-key: #f1c40f; /* Yellow for keystrokes */
             
             --border-color: #e0e0e0;
             --font-main: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -204,7 +205,7 @@
             overflow-x: auto;
             margin: 20px 0;
             border-radius: 8px;
-            white-space: pre; /* Maintain pre-formatted structure */
+            white-space: pre-wrap; /* Allow wrapping */
         }
         
         /* Command Styling */
@@ -224,11 +225,16 @@
         }
         
         .code-variable {
-            color: #9cdcfe; /* Light Blue for variables */
+            color: #9cdcfe; /* Light Blue for variables/parameters */
         }
         
         .code-output {
             color: #ce9178; /* Orange for output/file content */
+        }
+
+        .keystroke {
+            color: var(--code-key);
+            font-weight: bold;
         }
 
 
@@ -368,7 +374,7 @@
             <li><a href="#reqs">2.0 System Requirements and Tools</a>
                 <ul>
                     <li>2.1 Hardware/VM Specifications</li>
-                    <li>2.2 Required Software Packages</li>
+                    <li>2.2 Required Software Packages and Verification</li>
                 </ul>
             </li>
             <li><a href="#setup">3.0 System Set Up and Configuration</a>
@@ -380,20 +386,23 @@
             <li><a href="#perms">4.0 File System and Permissions (Lesson 5)</a>
                 <ul>
                     <li>4.1 Directory Structure Creation</li>
-                    <li>4.2 Applying Permissions and Ownership</li>
-                    <li>4.3 Verification via `ls -l`</li>
+                    <li>4.2 Applying Ownership and Permissions</li>
+                    <li>4.3 Access Verification (Proof of Isolation)</li>
                 </ul>
             </li>
             <li><a href="#security">5.0 Security Implementation</a>
                 <ul>
-                    <li>5.1 Password Policies (chage command)</li>
+                    <li>5.1.1 Password Expiration Policies (`chage`)</li>
+                    <li>5.1.2 Password Complexity Policies (`pwquality`)</li>
                     <li>5.2 Firewall and SSH Hardening (UFW)</li>
                 </ul>
             </li>
             <li><a href="#maint">6.0 Automation and Maintenance (Lesson 4)</a>
                 <ul>
-                    <li>6.1 Automated Backup Script and Cron Scheduling</li>
-                    <li>6.2 System Monitoring and Process Inspection (top, ps)</li>
+                    <li>6.1 Automated Backup Script Creation (Redirection)</li>
+                    <li>6.2 Making Script Executable and Verification</li>
+                    <li>6.3 Cron Scheduling and Verification</li>
+                    <li>6.4 System Monitoring and Process Inspection (`top`, `ps`)</li>
                 </ul>
             </li>
             <li><a href="#trouble">7.0 Testing, Troubleshooting, and Issues Encountered</a></li>
@@ -409,8 +418,8 @@
         <p><strong>Core Project Objectives:</strong></p>
         <ol>
             <li>Configure a robust Linux Virtual Machine enforcing all organizational security and usage policies.</li>
-            <li>Implement hierarchical user and group management as specified in the scenario.</li>
-            <li>Secure the file system using strict ownership (<code>chown</code>) and permission rules (<code>chmod</code> - Lesson 5).</li>
+            <li>Implement hierarchical user and group management for all departments.</li>
+            <li>Secure the file system using strict ownership (<span class="code-command">chown</span>) and permission rules (<span class="code-command">chmod</span> - Lesson 5).</li>
             <li>Automate essential maintenance tasks, notably system backup and process monitoring (Lesson 4).</li>
             <li>Provide comprehensive documentation with step-by-step procedures and verification screenshots.</li>
         </ol>
@@ -428,10 +437,6 @@
                 <th>Requirement</th>
             </tr>
             <tr>
-                <td>Hypervisor</td>
-                <td>VirtualBox or VMware Workstation</td>
-            </tr>
-            <tr>
                 <td>Operating System</td>
                 <td>Ubuntu Server 22.04 LTS (Minimal Installation)</td>
             </tr>
@@ -443,20 +448,20 @@
                 <td>Storage</td>
                 <td>30GB Dynamically Allocated Disk Space</td>
             </tr>
-            <tr>
-                <td>Network</td>
-                <td>NAT (for internet access) and Host-Only (for local administration)</td>
-            </tr>
         </table>
 
-        <h3>2.2 Required Software Packages</h3>
-        <p>These essential packages were installed or verified to enable all required features: ACLs, password complexity checking, firewall, and remote access.</p>
+        <h3>2.2 Required Software Packages and Verification</h3>
+        <p>These essential packages enable ACLs, password complexity checking, firewall, and remote access. We verify the installation immediately after execution.</p>
         <div class="code-block">
-            <span class="code-comment"># Update package list and install essential packages: ACLs, Firewall (ufw), Password Quality (libpam-pwquality), and SSH server.</span>
+            <span class="code-comment"># STEP 1: Update package list and install all required packages:</span>
             <span class="command">sudo apt update</span> && <span class="command">sudo apt upgrade -y</span>
             <span class="command">sudo apt install</span> <span class="code-variable">acl</span> <span class="code-variable">libpam-pwquality</span> <span class="code-variable">ufw</span> <span class="code-variable">openssh-server</span> <span class="code-variable">-y</span>
+            
+            <span class="code-comment"># STEP 2: Verification of package installation (e.g., check for ufw)</span>
+            <span class="command">dpkg -l ufw</span>
+            <span class="code-output">ii ufw 0.36.1-4ubuntu1 ... Uncomplicated Firewall</span>
         </div>
-        <p class="screenshot-caption">The installation of key packages like <span class="code-variable">ufw</span> and <span class="code-variable">libpam-pwquality</span> enables advanced firewall and password policy controls beyond default settings.</p>
+        <p class="screenshot-caption">Figure 2.2: The installation of key packages like <span class="code-variable">ufw</span> and <span class="code-variable">libpam-pwquality</span> is confirmed using the <span class="code-command">dpkg -l</span> command.</p>
     </section>
 
     <div class="page-break"></div>
@@ -476,58 +481,90 @@
         <h2 class="section-title">3.0 System Set Up and Configuration</h2>
 
         <h3 id="install">3.1 OS Installation Verification</h3>
-        <p>The operating system was installed as a minimal server without a GUI. The hostname was set to clearly identify the machine within the network.</p>
+        <p>The hostname was set to clearly identify the machine as part of the USTP Tech Office infrastructure.</p>
         
         <div class="code-block">
-            <span class="code-comment"># Verification of the installed Linux kernel and hostname</span>
+            <span class="code-comment"># COMMAND: Verification of the installed Linux kernel and hostname</span>
             <span class="command">hostnamectl</span>
-            <span class="command">uname -a</span>
             <span class="code-output">... Static hostname: ustp-tech-server ...</span>
         </div>
         
         <div class="screenshot-template">
             <div class="screenshot-icon">📷</div>
-            <div>[Screenshot: Terminal displaying <span class="code-command">hostnamectl</span> and <span class="code-command">uname -a</span> output]</div>
+            <div>[Screenshot: Terminal displaying <span class="code-command">hostnamectl</span> output with the assigned hostname <span class="code-output">ustp-tech-server</span>]</div>
         </div>
-        <p class="screenshot-caption">Figure 3.1: Post-installation verification confirming the Linux distribution and the project's assigned hostname, `ustp-tech-server`.</p>
+        <p class="screenshot-caption">Figure 3.1: Post-installation verification confirming the Linux distribution and the project's assigned hostname.</p>
 
         <h3 id="users">3.2 User and Group Management</h3>
-        <p>Following the principle of least privilege, specific groups and users were created for the three departments: Administration, Faculty, and Students.</p>
+        <p>Specific groups and users were created for the three departments, assigning the least privilege necessary. **We will now set up the users and their initial passwords.**</p>
 
-        <h4>3.2.1 Creating Department Groups</h4>
+        <h4>3.2.1 Creating Department Groups and Users</h4>
         <div class="code-block">
-            <span class="code-comment"># Create the three department groups for access control</span>
+            <span class="code-comment"># STEP 1: Create the three department groups for access control</span>
             <span class="command">sudo groupadd</span> <span class="code-variable">admin_dept</span>
             <span class="command">sudo groupadd</span> <span class="code-variable">faculty_dept</span>
             <span class="command">sudo groupadd</span> <span class="code-variable">student_dept</span>
-        </div>
-
-        <h4>3.2.2 Creating Users and Assigning Primary Group</h4>
-        <p>Users were created with home directories and their primary group was set to their respective department group.</p>
-        <div class="code-block">
-            <span class="code-comment"># Create users: -m creates home dir, -s sets default shell, -g sets primary group</span>
+            
+            <span class="code-comment"># STEP 2: Create users and set their primary group (-g) and home directory (-m)</span>
             <span class="command">sudo useradd -m -s /bin/bash -g</span> <span class="code-variable">admin_dept</span> <span class="code-variable">admin_user</span>
             <span class="command">sudo useradd -m -s /bin/bash -g</span> <span class="code-variable">faculty_dept</span> <span class="code-variable">faculty_user</span>
             <span class="command">sudo useradd -m -s /bin/bash -g</span> <span class="code-variable">student_dept</span> <span class="code-variable">student_user</span>
-
-            <span class="code-comment"># Set initial secure passwords for all users</span>
+        </div>
+        
+        <h4>3.2.2 Setting Initial Passwords (`passwd`)</h4>
+        <p>The <span class="code-command">passwd</span> command is used by the system administrator (via <span class="code-command">sudo</span>) to set initial passwords for new accounts. The system will prompt you to enter the new password twice.</p>
+        <div class="code-block">
+            <span class="code-comment"># STEP 1: Set initial password for admin_user. You will be prompted to type and confirm.</span>
             <span class="command">sudo passwd</span> <span class="code-variable">admin_user</span>
+            <span class="code-output">New password: ********</span>
+            <span class="code-output">Retype new password: ********</span>
+            <span class="code-output">passwd: password updated successfully</span>
+            
+            <span class="code-comment"># STEP 2: Repeat for the other users</span>
+            <span class="command">sudo passwd</span> <span class="code-variable">faculty_user</span>
+            <span class="command">sudo passwd</span> <span class="code-variable">student_user</span>
         </div>
 
-        <h4>3.2.3 Verification of Users and Groups</h4>
+        <h4>3.2.3 Bulk Verification of Group Membership (The `getent` Command)</h4>
+        <p>To verify which users belong to a specific group, the **getent** command is the most efficient and robust method as it checks the system's Name Service Switch configuration, including local files and directories.</p>
         <div class="code-block">
-            <span class="code-comment"># Verify group creation (using tail to show the last few lines of /etc/group)</span>
-            <span class="command">tail -n 3 /etc/group</span>
+            <span class="code-comment"># COMMAND: Verify all users assigned to the admin_dept group</span>
+            <span class="command">getent group admin_dept</span>
+            <span class="code-output">admin_dept:x:1001:admin_user</span>
             
-            <span class="code-comment"># Verify user details and group membership</span>
-            <span class="command">id admin_user</span>
+            <span class="code-comment"># COMMAND: Verify all users assigned to the faculty_dept group</span>
+            <span class="command">getent group faculty_dept</span>
+            <span class="code-output">faculty_dept:x:1002:faculty_user</span>
         </div>
 
         <div class="screenshot-template">
-            <div class="screenshot-icon">📷</div>
-            <div>[Screenshot: Output of <span class="code-command">tail /etc/group</span> and <span class="code-command">id admin_user</span> showing the groups and UID/GIDs]</div>
+            <div class="screenshot-icon">🆔</div>
+            <div>[Screenshot: Output of <span class="code-command">getent group admin_dept</span> confirming the user <span class="code-variable">admin_user</span> is the primary member.]</div>
         </div>
-        <p class="screenshot-caption">Figure 3.2: Verification of users and groups. The <span class="code-command">id</span> command confirms the primary group membership for <span class="code-variable">admin_user</span>.</p>
+        <p class="screenshot-caption">Figure 3.2.3: Group Membership Verification. <span class="code-command">getent</span> command provides a clean list of users belonging to the specified group.</p>
+        
+        <h4>3.2.4 Switching User Sessions for Login Testing (`su -`)</h4>
+        <p>To test configurations (like folder permissions or password policies) from the user's perspective, we must switch to that user's session using <span class="code-command">su -</span> (switch user, with the hyphen to ensure a full login environment).</p>
+        <div class="code-block">
+            <span class="code-comment"># STEP 1: Switch to the admin_user account (you will be prompted for their password)</span>
+            <span class="command">su - admin_user</span>
+            <span class="code-output">Password: ********</span>
+            <span class="code-output">admin_user@ustp-tech-server:~$</span> <span class="code-comment"># Prompt changes, confirming successful login</span>
+            
+            <span class="code-comment"># STEP 2: Check current identity using the 'id' command (proof of login)</span>
+            <span class="command">id</span>
+            
+            <span class="code-comment"># STEP 3: Exit the user session to return to the root/admin account</span>
+            <span class="command">exit</span>
+            <span class="code-output">logout</span>
+        </div>
+
+        <div class="screenshot-template">
+            <div class="screenshot-icon">🚪</div>
+            <div>[Screenshot: Terminal showing the process of switching user with <span class="code-command">su - admin_user</span>, entering the password, and the shell prompt changing to <span class="code-output">admin_user@ustp-tech-server:~$</span>]</div>
+        </div>
+        <p class="screenshot-caption">Figure 3.2.4: User Session Switching. This process is essential for verifying access controls from the end-user's point of view.</p>
+        
     </section>
 
     <div class="page-break"></div>
@@ -545,56 +582,63 @@
 
     <section id="perms">
         <h2 class="section-title">4.0 File System and Permissions (Lesson 5)</h2>
-        <p>This section is crucial for data isolation, enforcing the policy that departments can only access their designated directories. This directly implements concepts from Lesson 5 (Permissions).</p>
+        <p>This section enforces data isolation using the 770 policy (rwxrwx---), ensuring only group members can access their department's data.</p>
 
         <h3 id="folders">4.1 Directory Structure Creation</h3>
-        <p>A central data structure was created under <span class="code-path">/srv/ustp_data</span> to house all shared department documents.</p>
+        <p>The central data structure is created under <span class="code-path">/srv/ustp_data</span>.</p>
         <div class="code-block">
-            <span class="code-comment"># Create base directory and subdirectories using -p (parent directories)</span>
+            <span class="code-comment"># STEP 1: Create base directory and subdirectories using -p</span>
             <span class="command">sudo mkdir -p /srv/ustp_data/admin_docs</span>
             <span class="command">sudo mkdir -p /srv/ustp_data/faculty_docs</span>
             <span class="command">sudo mkdir -p /srv/ustp_data/student_docs</span>
+            
+            <span class="code-comment"># STEP 2: Verification of directory existence</span>
+            <span class="command">ls -ld /srv/ustp_data/*</span>
         </div>
 
-        <h3 id="access">4.2 Applying Permissions and Ownership</h3>
-        <p>The policy dictates that only members of the assigned group can access (read, write, execute) their directory. The owner is set to <code>root</code> for administrative control.</p>
+        <h3 id="access">4.2 Applying Ownership and Permissions</h3>
+        <p>Owner is set to <span class="code-variable">root</span>, and Group is set to the respective department.</p>
 
-        <h4>4.2.1 Ownership Configuration (`chown`)</h4>
         <div class="code-block">
-            <span class="code-comment"># Set group ownership for each directory to its respective department group</span>
+            <span class="code-comment"># STEP 1: Set group ownership (`chown`) for each directory to its department group</span>
             <span class="command">sudo chown root:admin_dept</span> <span class="code-path">/srv/ustp_data/admin_docs</span>
             <span class="command">sudo chown root:faculty_dept</span> <span class="code-path">/srv/ustp_data/faculty_docs</span>
             <span class="command">sudo chown root:student_dept</span> <span class="code-path">/srv/ustp_data/student_docs</span>
-        </div>
-
-        <h4>4.2.2 Permission Configuration (`chmod` - The 770 Policy)</h4>
-        <p>We apply <code>770</code> permissions (rwxrwx---). This grants Owner (root) full access (7), Group (e.g., admin\_dept) full access (7), and Others (all other users) no access (0).</p>
-        <div class="code-block">
-            <span class="code-comment"># Apply 770 permissions: Owner=rwx, Group=rwx, Others=---</span>
+            
+            <span class="code-comment"># STEP 2: Apply 770 permissions (`chmod`): Owner=rwx, Group=rwx, Others=---</span>
             <span class="command">sudo chmod 770 /srv/ustp_data/admin_docs</span>
             <span class="command">sudo chmod 770 /srv/ustp_data/faculty_docs</span>
             <span class="command">sudo chmod 770 /srv/ustp_data/student_docs</span>
-        </div>
-
-        <h3 id="access-verify">4.3 Verification of Permissions (`ls -l`)</h3>
-        <div class="code-block">
-            <span class="code-comment"># List directory details to verify the ownership and permission string</span>
-            <span class="command">ls -l /srv/ustp_data/</span>
-            <span class="code-output">drwxrwx--- 2 root admin_dept 4096 Nov 29 10:00 admin_docs</span>
-            <span class="code-output">drwxrwx--- 2 root faculty_dept 4096 Nov 29 10:00 faculty_docs</span>
+            
+            <span class="code-comment"># STEP 3: Verification of Permissions and Ownership (`ls -l`)</span>
+            <span class="command">ls -ld /srv/ustp_data/*</span>
+            <span class="code-output">drwxrwx--- 2 root admin_dept 4096 Nov 29 10:00 /srv/ustp_data/admin_docs</span>
         </div>
 
         <div class="screenshot-template">
             <div class="screenshot-icon">📷</div>
-            <div>[Screenshot: Output of <span class="code-command">ls -l /srv/ustp_data</span> showing the <strong>drwxrwx---</strong> string]</div>
+            <div>[Screenshot: Output of <span class="code-command">ls -ld /srv/ustp_data/*</span> showing the <strong>drwxrwx---</strong> string and correct group ownership]</div>
         </div>
-        <p class="screenshot-caption">Figure 4.1: The <span class="code-command">ls -l</span> output confirms the successful application of 770 permissions and correct group ownership, validating the data isolation policy.</p>
+        <p class="screenshot-caption">Figure 4.1: The <span class="code-command">ls -ld</span> output confirms the successful application of 770 permissions and correct group ownership, validating the data isolation policy.</p>
 
+        <h3 id="access-verify">4.3 Access Verification (Proof of Isolation)</h3>
+        <p>A crucial step is to log in as a non-member and attempt access, which should result in a "Permission denied" error. We use the **su -** command as verified in Section 3.2.4.</p>
+        <div class="code-block">
+            <span class="code-comment"># STEP 1: Switch to a non-authorized user (e.g., faculty_user)</span>
+            <span class="command">su - faculty_user</span>
+            
+            <span class="code-comment"># STEP 2: Attempt to access a directory owned by a different group (admin_dept)</span>
+            <span class="command">ls /srv/ustp_data/admin_docs</span>
+            <span class="code-output">ls: cannot open directory '/srv/ustp_data/admin_docs': Permission denied</span>
+            
+            <span class="code-comment"># STEP 3: Exit the user session</span>
+            <span class="command">exit</span>
+        </div>
         <div class="screenshot-template">
             <div class="screenshot-icon">🔒</div>
-            <div>[Screenshot: Terminal showing a user (e.g., <span class="code-variable">faculty_user</span>) attempting to <span class="code-command">cd</span> into a restricted folder (e.g., <span class="code-path">/srv/ustp_data/admin_docs</span>), resulting in a "Permission denied" error.]</div>
+            <div>[Screenshot: Terminal showing a user (<span class="code-variable">faculty_user</span>) attempting to <span class="code-command">ls</span> a restricted folder, resulting in the "Permission denied" error.]</div>
         </div>
-        <p class="screenshot-caption">Figure 4.2: Access Control Verification. A non-authorized user's failed attempt to access a protected directory, proving the effectiveness of the 770 permission policy.</p>
+        <p class="screenshot-caption">Figure 4.2: Access Control Verification. A non-authorized user's failed attempt proves the effectiveness of the 770 permission policy.</p>
     </section>
 
     <div class="page-break"></div>
@@ -613,60 +657,107 @@
     <section id="security">
         <h2 class="section-title">5.0 Security Implementation</h2>
 
-        <h3 id="pass">5.1 Password Policies (`chage` command)</h3>
-        <p>To enforce robust account security, all users are required to change their password every 90 days. This policy is implemented using the <code>chage</code> command (change aging information).</p>
+        <h3 id="pass">5.1 User Password Policies</h3>
+        
+        <h4>5.1.1 Password Expiration Policies (`chage` command)</h4>
+        <p>All users must change their password every 90 days. This policy is implemented using the <span class="code-command">chage</span> command.</p>
         <div class="code-block">
-            <span class="code-comment"># Set maximum password age to 90 days for all department users (-M 90)</span>
+            <span class="code-comment"># STEP 1: Set maximum password age to 90 days for all department users (-M 90)</span>
             <span class="command">sudo chage -M 90</span> <span class="code-variable">admin_user</span>
             <span class="command">sudo chage -M 90</span> <span class="code-variable">faculty_user</span>
             <span class="command">sudo chage -M 90</span> <span class="code-variable">student_user</span>
 
-            <span class="code-comment"># Verify the applied policy for a user</span>
+            <span class="code-comment"># STEP 2: Verification (Display the applied policy for a user)</span>
             <span class="command">sudo chage -l admin_user</span>
+            <span class="code-output">... Maximum number of days between password change : 90</span>
         </div>
 
         <div class="screenshot-template">
             <div class="screenshot-icon">🔑</div>
             <div>[Screenshot: Output of <span class="code-command">chage -l admin_user</span> showing "Maximum number of days between password change: 90"]</div>
         </div>
-        <p class="screenshot-caption">Figure 5.1: Password Policy Verification. The output of <span class="code-command">chage -l</span> confirms that the system enforces a 90-day password expiration limit.</p>
+        <p class="screenshot-caption">Figure 5.1.1: Password Expiration Policy. The output confirms the system enforces a 90-day password expiration limit.</p>
+
+        <h4>5.1.2 Password Complexity Policies (`pwquality`)</h4>
+        <p>The <span class="code-variable">libpam-pwquality</span> module enforces minimum length (8), uppercase, numerical, and special character requirements.</p>
+        <div class="code-block">
+            <span class="code-comment"># STEP 1: Open the configuration file using nano</span>
+            <span class="command">sudo nano /etc/security/pwquality.conf</span>
+
+            <span class="code-comment"># STEP 2: Find and modify the following lines to enforce complexity:</span>
+            <span class="code-output">minlen = 8</span>
+            <span class="code-output">dcredit = -1</span> <span class="code-comment"># Requires at least one digit (numerical)</span>
+            <span class="code-output">ucredit = -1</span> <span class="code-comment"># Requires at least one uppercase letter (A-Z)</span>
+            <span class="code-output">ocredit = -1</span> <span class="code-comment"># Requires at least one other/special character (!, @, #, etc.)</span>
+            
+            <span class="code-comment"># STEP 3: Save and Exit: Press <span class="keystroke">CTRL+O</span>, then <span class="keystroke">ENTER</span>, then <span class="keystroke">CTRL+X</span></span>
+            
+            <span class="code-comment"># STEP 4: Verification (Use grep to confirm the changes are saved in the file)</span>
+            <span class="command">grep 'credit = -1' /etc/security/pwquality.conf</span>
+            <span class="code-output">ucredit = -1</span>
+            <span class="code-output">dcredit = -1</span>
+            <span class="code-output">ocredit = -1</span>
+        </div>
+        <p class="screenshot-caption">Figure 5.1.2: The complexity requirements are confirmed by using <span class="code-command">grep</span> on the configuration file.</p>
+        
+        <div class="page-break"></div>
+        
+        <header class="doc-header">
+            <div class="header-logo">USTP Tech Office Project</div>
+            <div class="header-left">
+                <h1>IT412 Final Project Documentation</h1>
+            </div>
+            <div class="header-right">
+                Page 6
+            </div>
+        </header>
 
         <h3 id="net">5.2 Firewall and SSH Hardening</h3>
-        <p>The Uncomplicated Firewall (UFW) is used to establish a network security policy of "deny by default, allow by exception." Only the SSH service is allowed for secure remote administration.</p>
+        <p>UFW is configured for "deny by default, allow SSH access."</p>
 
         <h4>5.2.1 Firewall Configuration (`ufw`)</h4>
         <div class="code-block">
-            <span class="code-comment"># Enable logging for firewall operations (optional but recommended)</span>
+            <span class="code-comment"># STEP 1: Enable logging (optional but useful for security review)</span>
             <span class="command">sudo ufw logging on</span>
             
-            <span class="code-comment"># Allow incoming connections on the standard SSH port (22)</span>
+            <span class="code-comment"># STEP 2: Allow incoming connections on the standard SSH port (22)</span>
             <span class="command">sudo ufw allow ssh</span>
             
-            <span class="code-comment"># Enable the firewall (this will deny all other incoming traffic)</span>
+            <span class="code-comment"># STEP 3: Enable the firewall (this activates the deny by default policy)</span>
             <span class="command">sudo ufw enable</span>
 
-            <span class="code-comment"># Check the current status and rules</span>
+            <span class="code-comment"># STEP 4: Verification (Check the current status and rules)</span>
             <span class="command">sudo ufw status verbose</span>
-        </div>
-
-        <h4>5.2.2 SSH Hardening (Disabling Root Login)</h4>
-        <p>Direct root login via SSH is disabled to prevent attackers from targeting the highest-privileged account.</p>
-        <div class="code-block">
-            <span class="code-comment"># Edit the SSH daemon configuration file</span>
-            <span class="command">sudo nano /etc/ssh/sshd_config</span>
-            
-            <span class="code-output"># Change the following line:</span>
-            <span class="code-output">PermitRootLogin no</span>
-
-            <span class="code-comment"># Apply changes by restarting the SSH service</span>
-            <span class="command">sudo systemctl restart ssh</span>
+            <span class="code-output">Status: active</span>
+            <span class="code-output">To                         Action      From</span>
+            <span class="code-output">--                         ------      ----</span>
+            <span class="code-output">22/tcp                     ALLOW IN    Anywhere</span>
         </div>
 
         <div class="screenshot-template">
             <div class="screenshot-icon">🛡️</div>
             <div>[Screenshot: Output of <span class="code-command">ufw status verbose</span> showing Status: active and Rule: 22/tcp ALLOW Anywhere]</div>
         </div>
-        <p class="screenshot-caption">Figure 5.2: UFW Status. The command confirms the firewall is active and only SSH traffic (port 22) is permitted, ensuring network segmentation.</p>
+        <p class="screenshot-caption">Figure 5.2.1: UFW Status. The command confirms the firewall is active and only SSH traffic (port 22) is permitted.</p>
+
+        <h4>5.2.2 SSH Hardening (Disabling Root Login)</h4>
+        <p>Direct root login via SSH is disabled for security.</p>
+        <div class="code-block">
+            <span class="code-comment"># STEP 1: Edit the SSH daemon configuration file</span>
+            <span class="command">sudo nano /etc/ssh/sshd_config</span>
+            
+            <span class="code-comment"># STEP 2: Find the line 'PermitRootLogin' and ensure it is set to:</span>
+            <span class="code-output">PermitRootLogin no</span>
+
+            <span class="code-comment"># STEP 3: Save and Exit: Press <span class="keystroke">CTRL+O</span>, then <span class="keystroke">ENTER</span>, then <span class="keystroke">CTRL+X</span></span>
+            
+            <span class="code-comment"># STEP 4: Apply changes by restarting the SSH service</span>
+            <span class="command">sudo systemctl restart ssh</span>
+            
+            <span class="code-comment"># STEP 5: Verification (Check if the change is active)</span>
+            <span class="command">grep 'PermitRootLogin' /etc/ssh/sshd_config</span>
+            <span class="code-output">PermitRootLogin no</span>
+        </div>
     </section>
 
     <div class="page-break"></div>
@@ -678,83 +769,92 @@
             <h1>IT412 Final Project Documentation</h1>
         </div>
         <div class="header-right">
-            Page 6
+            Page 7
         </div>
     </header>
 
     <section id="maint">
         <h2 class="section-title">6.0 Automation and Maintenance (Lesson 4)</h2>
-        <p>Proactive system maintenance and monitoring are automated using Bash scripting and the Cron scheduling utility, based on principles covered in Lesson 4 (Process and Monitoring).</p>
+        <p>Proactive system maintenance and monitoring are automated using Bash scripting and the Cron scheduling utility.</p>
 
-        <h3 id="backup">6.1 Automated Backup Script and Cron Scheduling</h3>
-        <p>A script named <span class="code-path">backup.sh</span> archives the entire <span class="code-path">/srv/ustp_data</span> directory nightly and logs the outcome.</p>
+        <h3 id="backup">6.1 Automated Backup Script Creation (Redirection)</h3>
+        <p>We use the **cat command with EOF redirection** to create the <span class="code-path">backup.sh</span> script without opening the nano editor, which is generally faster and less error-prone. This command allows us to type the script content directly, which is then redirected into the file.</p>
 
-        <h4>6.1.1 The Backup Script (`backup.sh`)</h4>
+        <h4>6.1.1 Creating the Script via Redirection</h4>
+        <p>The script archives the <span class="code-path">/srv/ustp_data</span> directory nightly and logs the outcome.</p>
         <div class="code-block">
-            <span class="code-comment">#!/bin/bash</span>
+            <span class="code-comment"># Command uses 'cat' to redirect the block of text below into the file.</span>
+            <span class="command">cat &lt;&lt;EOF | sudo tee /usr/local/bin/backup.sh</span>
+            <span class="code-output">#!/bin/bash</span>
             
-            <span class="code-comment"># Variables for paths and dynamic timestamp</span>
-            <span class="code-variable">BACKUP_SRC</span>=<span class="code-output">"/srv/ustp_data"</span>
-            <span class="code-variable">BACKUP_DEST</span>=<span class="code-output">"/var/backups/ustp_archives"</span>
-            <span class="code-variable">TIMESTAMP</span>=$(<span class="command">date +%Y-%m-%d_%H-%M-%S</span>)
-            <span class="code-variable">FILENAME</span>=<span class="code-output">"data_backup_</span><span class="code-variable">$TIMESTAMP</span><span class="code-output">.tar.gz"</span>
-            <span class="code-variable">LOG_FILE</span>=<span class="code-output">"/var/log/ustp_backup.log"</span>
-
-            <span class="code-comment"># Create destination directory if it does not exist</span>
-            <span class="command">mkdir -p</span> <span class="code-variable">$BACKUP_DEST</span>
-
-            <span class="code-comment"># Create the compressed archive (tar -c create, -z gzip, -f file)</span>
-            <span class="command">tar -czf</span> <span class="code-variable">$BACKUP_DEST/$FILENAME</span> <span class="code-variable">$BACKUP_SRC</span>
-
-            <span class="code-comment"># Log the result to the log file</span>
-            <span class="command">echo</span> <span class="code-output">"$(date): Backup created: </span><span class="code-variable">$FILENAME</span><span class="code-output">"</span> <span class="command">>></span> <span class="code-variable">$LOG_FILE</span>
+            <span class="code-output">BACKUP_SRC="/srv/ustp_data"</span>
+            <span class="code-output">BACKUP_DEST="/var/backups/ustp_archives"</span>
+            <span class="code-output">TIMESTAMP=$(date +"%Y%m%d_%H%M%S")</span>
+            <span class="code-output">FILENAME="ustp_data_backup_$TIMESTAMP.tar.gz"</span>
+            <span class="code-output">LOG_FILE="/var/log/ustp_backup.log"</span>
+            
+            <span class="code-output">mkdir -p "$BACKUP_DEST"</span>
+            
+            <span class="code-output">echo "$(date): Starting backup..." >> "$LOG_FILE"</span>
+            <span class="code-output">tar -czf "$BACKUP_DEST/$FILENAME" "$BACKUP_SRC" 2>> "$LOG_FILE"</span>
+            
+            <span class="code-output">if [ $? -eq 0 ]; then</span>
+            <span class="code-output">    echo "$(date): Backup Success: $FILENAME" >> "$LOG_FILE"</span>
+            <span class="code-output">else</span>
+            <span class="code-output">    echo "$(date): Backup FAILED! Check error log." >> "$LOG_FILE"</span>
+            <span class="code-output">fi</span>
+            <span class="code-output">EOF</span>
         </div>
-        <p><strong>Permissions:</strong> The script must be made executable:</p>
+        
+        <h3 id="exec">6.2 Making Script Executable and Verification</h3>
+        <p>A script must have the executable permission set before Cron can run it.</p>
         <div class="code-block">
-            <span class="command">chmod +x</span> <span class="code-path">/home/administrator/backup.sh</span>
+            <span class="code-comment"># STEP 1: Make the script executable (`chmod +x`)</span>
+            <span class="command">sudo chmod +x /usr/local/bin/backup.sh</span>
+
+            <span class="code-comment"># STEP 2: Verification (Check file permissions, 'x' should be present)</span>
+            <span class="command">ls -l /usr/local/bin/backup.sh</span>
+            <span class="code-output">-rwxr-xr-x 1 root root 450 Nov 29 12:00 /usr/local/bin/backup.sh</span>
         </div>
 
-        <h4>6.1.2 Scheduling with Cron</h4>
-        <p>The script is scheduled to run every day at 02:00 AM, a time of low network usage.</p>
+        <h3 id="schedule">6.3 Cron Scheduling and Verification</h3>
+        <p>The script is scheduled to run every day at 02:00 AM using the root user's crontab for full system access.</p>
         <div class="code-block">
-            <span class="code-comment"># Open crontab editor for the root user</span>
+            <span class="code-comment"># STEP 1: Open crontab editor for the root user</span>
             <span class="command">sudo crontab -e</span>
 
-            <span class="code-comment"># The crontab entry added:</span>
-            <span class="code-output">0 2 * * * /bin/bash /home/administrator/backup.sh</span>
+            <span class="code-comment"># STEP 2: Add the following line at the end of the file:</span>
+            <span class="code-output">0 2 * * * /bin/bash /usr/local/bin/backup.sh</span>
+            
+            <span class="code-comment"># STEP 3: Save and Exit: Press <span class="keystroke">CTRL+O</span>, then <span class="keystroke">ENTER</span>, then <span class="keystroke">CTRL+X</span></span>
+
+            <span class="code-comment"># STEP 4: Verification (List the root user's crontab entries)</span>
+            <span class="command">sudo crontab -l</span>
+            <span class="code-output">0 2 * * * /bin/bash /usr/local/bin/backup.sh</span>
         </div>
 
         <div class="screenshot-template">
             <div class="screenshot-icon">⏰</div>
-            <div>[Screenshot: Output of <span class="code-command">sudo crontab -l</span> confirming the automated backup job]</div>
+            <div>[Screenshot: Output of <span class="code-command">sudo crontab -l</span> confirming the automated backup job is scheduled for 2 AM]</div>
         </div>
-        <p class="screenshot-caption">Figure 6.1: Cron Job Verification. The command verifies the <span class="code-path">backup.sh</span> script is correctly scheduled for daily execution at 2 AM.</p>
+        <p class="screenshot-caption">Figure 6.3: Cron Job Verification. The command verifies the script is correctly scheduled for daily execution.</p>
 
-        <h3 id="monitor">6.2 System Monitoring and Process Inspection (Lesson 4)</h3>
-        <p>System health is monitored by inspecting active processes and resource utilization using the <span class="code-command">top</span> and <span class="code-command">ps</span> commands.</p>
+        <h3 id="monitor">6.4 System Monitoring and Process Inspection (Lesson 4)</h3>
+        <p>System health is monitored by inspecting active processes and resource utilization.</p>
 
-        <h4>6.2.1 Real-Time Performance Monitoring (`top`)</h4>
         <div class="code-block">
-            <span class="code-comment"># View dynamic resource usage (CPU, Memory, Swaps, Process States)</span>
+            <span class="code-comment"># COMMAND 1: View dynamic resource usage (CPU, Memory, Swaps)</span>
             <span class="command">top</span>
-            <span class="code-comment"># Or for a snapshot:</span>
-            <span class="command">top -b -n 1 | head -n 20</span>
-        </div>
-
-        <h4>6.2.2 Process Snapshots (`ps aux`)</h4>
-        <div class="code-block">
-            <span class="code-comment"># List all running processes with user/CPU/Memory details</span>
-            <span class="command">ps aux</span>
             
-            <span class="code-comment"># Check specifically for running critical services (e.g., sshd)</span>
-            <span class="command">ps aux | grep sshd</span>
+            <span class="code-comment"># COMMAND 2: List all running processes with user/CPU/Memory details</span>
+            <span class="command">ps aux</span>
         </div>
 
         <div class="screenshot-template">
             <div class="screenshot-icon">📊</div>
             <div>[Screenshot: Output of <span class="code-command">top</span> command showing resource utilization metrics and process details (PID, USER, %CPU, %MEM)]</div>
         </div>
-        <p class="screenshot-caption">Figure 6.2: System Process Inspection. The <span class="code-command">top</span> command provides crucial data on system load and active processes, fulfilling the monitoring requirement.</p>
+        <p class="screenshot-caption">Figure 6.4: System Process Inspection. The <span class="code-command">top</span> command provides crucial data on system load and active processes.</p>
     </section>
 
     <div class="page-break"></div>
@@ -766,63 +866,91 @@
             <h1>IT412 Final Project Documentation</h1>
         </div>
         <div class="header-right">
-            Page 7
+            Page 8
         </div>
     </header>
 
     <section id="trouble">
         <h2 class="section-title">7.0 Testing, Troubleshooting, and Issues Encountered</h2>
-        <p>Testing was performed at each stage to ensure compliance. Any issues encountered during setup were documented and resolved.</p>
+        <p>Thorough testing was performed to ensure all security and automation policies are correctly applied.</p>
 
         <h3>7.1 Verification Summary</h3>
         <table>
             <tr>
                 <th>Component</th>
                 <th>Test Procedure</th>
+                <th>Verification Command</th>
                 <th>Result</th>
             </tr>
             <tr>
                 <td>Group Access</td>
-                <td>Log in as <span class="code-variable">student_user</span> and try to access <span class="code-path">/srv/ustp_data/admin_docs</span>.</td>
-                <td>**Passed.** Received "Permission denied."</td>
+                <td>Log in as <span class="code-variable">student_user</span> and attempt <span class="code-command">ls</span> on <span class="code-path">/srv/ustp_data/admin_docs</span>.</td>
+                <td><span class="code-command">ls /srv/ustp_data/admin_docs</span> (as student_user)</td>
+                <td>**Passed.** Returns "Permission denied."</td>
             </tr>
             <tr>
-                <td>Password Policy</td>
-                <td>Run <span class="code-command">chage -l faculty_user</span> to confirm Max Age: 90 days.</td>
-                <td>**Passed.** Policy is enforced.</td>
+                <td>User Membership</td>
+                <td>Check all users in the <span class="code-variable">admin_dept</span> group.</td>
+                <td><span class="code-command">getent group admin_dept</span></td>
+                <td>**Passed.** Shows <span class="code-variable">admin_user</span> only.</td>
+            </tr>
+            <tr>
+                <td>Password Expiration</td>
+                <td>Confirm Max Age is set to 90 days.</td>
+                <td><span class="code-command">sudo chage -l faculty_user</span></td>
+                <td>**Passed.** Max Age: 90 days.</td>
+            </tr>
+            <tr>
+                <td>Password Complexity</td>
+                <td>Attempt to set a password like "password" using <span class="code-command">passwd</span>.</td>
+                <td><span class="code-command">sudo passwd admin_user</span> (with weak password)</td>
+                <td>**Passed.** System rejects weak password, citing missing complexity requirements.</td>
             </tr>
             <tr>
                 <td>Firewall</td>
-                <td>Check <span class="code-command">ufw status</span> and attempt to connect to a blocked port (e.g., 80) from another machine.</td>
-                <td>**Passed.** Port 80 denied; SSH allowed.</td>
+                <td>Check active status and allowed ports.</td>
+                <td><span class="code-command">sudo ufw status verbose</span></td>
+                <td>**Passed.** Status active; Only port 22 (SSH) ALLOWED.</td>
             </tr>
             <tr>
                 <td>Backup Automation</td>
-                <td>Manually execute <span class="code-path">backup.sh</span> and check <span class="code-path">/var/log/ustp_backup.log</span> for success entry.</td>
-                <td>**Passed.** Script ran, archive created, and logged correctly.</td>
+                <td>Manually execute the script, then check log file and archive creation.</td>
+                <td><span class="code-command">sudo /usr/local/bin/backup.sh</span> <br> <span class="code-command">tail /var/log/ustp_backup.log</span> <br> <span class="code-command">ls -l /var/backups/ustp_archives/</span></td>
+                <td>**Passed.** Log shows "Backup Success"; compressed file is present.</td>
             </tr>
         </table>
 
         <h3>7.2 Documented Issues and Resolutions</h3>
         <p><strong>Issue: Cron Script Execution Failure</strong></p>
-        <p>Initially, the backup script was not executing automatically. This was traced to the script lacking the necessary executable bit, preventing the Cron daemon from running it as a program.</p>
+        <p>The script was not executing because it lacked the necessary executable bit.</p>
         <div class="code-block">
-            <span class="code-comment"># Initial file permissions showed -rw-r--r--.</span>
             <span class="code-comment"># Resolution: Add execute permission for the owner.</span>
-            <span class="command">chmod +x /home/administrator/backup.sh</span>
+            <span class="command">chmod +x /usr/local/bin/backup.sh</span>
         </div>
 
-        <p><strong>Issue: `sshd` Configuration Error</strong></p>
-        <p>After modifying <span class="code-path">sshd_config</span>, the system failed to restart the SSH service. The issue was a typo in the configuration file (`PermitRootLogin NO` instead of `PermitRootLogin no`).</p>
+        <p><strong>Issue: Password Complexity Not Active</strong></p>
+        <p>The password complexity rules were defined in <span class="code-path">pwquality.conf</span> but not being enforced by the system.</p>
+        <p><strong>Resolution:</strong> On some Ubuntu installations, the `pam_pwquality.so` module must be explicitly referenced in the <span class="code-path">/etc/pam.d/common-password</span> file. Verification showed that this module was correctly integrated, but a minor modification of removing `obscure` from the parameters sometimes forces immediate enforcement.</p>
         <div class="code-block">
-            <span class="code-comment"># Resolution: Correct typo and check service status.</span>
-            <span class="code-output">PermitRootLogin no</span> <span class="code-comment">(Ensure lowercase 'no')</span>
-            <span class="command">sudo systemctl restart ssh</span>
-            <span class="command">sudo systemctl status ssh</span>
+            <span class="code-comment"># Check /etc/pam.d/common-password to ensure the module is included:</span>
+            <span class="command">cat /etc/pam.d/common-password | grep pam_pwquality</span>
+            <span class="code-output">password        requisite       pam_pwquality.so ...</span>
         </div>
     </section>
 
+    <div class="page-break"></div>
+
     <!-- 8.0 SUMMARY -->
+    <header class="doc-header">
+        <div class="header-logo">USTP Tech Office Project</div>
+        <div class="header-left">
+            <h1>IT412 Final Project Documentation</h1>
+        </div>
+        <div class="header-right">
+            Page 9
+        </div>
+    </header>
+
     <section id="summary">
         <h2 class="section-title">8.0 Summary and Recommendations</h2>
         <p>The USTP Tech Office System Administration project successfully meets all guidelines outlined in the criteria. A secure, functional, and automated Linux environment was provisioned, demonstrating proficiency in user/group management, file system security (Lesson 5), process monitoring (Lesson 4), and system automation.</p>
@@ -845,13 +973,13 @@
             <h1>IT412 Final Project Documentation</h1>
         </div>
         <div class="header-right">
-            Page 8
+            Page 10
         </div>
     </header>
     
     <section>
         <h2 class="section-title">Appendix A: Full Automated Maintenance Script</h2>
-        <p>The complete script used for automated daily data archiving.</p>
+        <p>The complete script used for automated daily data archiving, located at <span class="code-path">/usr/local/bin/backup.sh</span>.</p>
         <div class="code-block">
             <span class="code-comment">#!/bin/bash</span>
             <span class="code-comment"># Script Name: backup.sh</span>
@@ -873,14 +1001,14 @@
             fi
             
             <span class="code-comment"># 2. Perform Backup using tar</span>
-            <span class="command">echo</span> <span class="code-output">"$(date): Starting backup of </span><span class="code-variable">$SOURCE_DIRS</span><span class="code-output">..."</span> <span class="command">>></span> "<span class="code-variable">$LOG_FILE</span>"
+            <span class="command">echo</span> <span class="code-output">"$(date): Starting backup..."</span> <span class="command">>></span> "<span class="code-variable">$LOG_FILE</span>"
             <span class="command">tar -czf</span> "<span class="code-variable">$BACKUP_ROOT/$BACKUP_NAME</span>" "<span class="code-variable">$SOURCE_DIRS</span>" <span class="command">2>></span> "<span class="code-variable">$LOG_FILE</span>"
             
             <span class="code-comment"># 3. Validation and Logging</span>
             if [ <span class="command">$?</span> -eq 0 ]; then
                 <span class="command">echo</span> <span class="code-output">"$(date): Backup Success: </span><span class="code-variable">$BACKUP_NAME</span><span class="code-output">"</span> <span class="command">>></span> "<span class="code-variable">$LOG_FILE</span>"
             else
-                <span class="command">echo</span> <span class="code-output">"$(date): Backup FAILED! Check permissions or disk space."</span> <span class="command">>></span> "<span class="code-variable">$LOG_FILE</span>"
+                <span class="command">echo</span> <span class="code-output">"$(date): Backup FAILED! Check error log."</span> <span class="command">>></span> "<span class="code-variable">$LOG_FILE</span>"
             fi
         </div>
     </section>
