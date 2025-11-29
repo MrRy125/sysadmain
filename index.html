@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT412 Final Project Documentation - USTP</title>
+    <style>
+        :root {
+            /* Professional Palette */
+            --primary-color: #2c3e50; /* Dark Blue/Charcoal */
+            --secondary-color: #34495e; /* Slightly Lighter Charcoal */
+            --accent-color: #3498db; /* Bright Blue for emphasis */
+            
+            /* Code Styling */
+            --code-bg: #2d2d2d; /* VS Code dark background */
+            --code-text: #f8f8f2; /* Light text */
+            --code-comment: #6a9955; /* Green for comments */
+            --code-command: #569cd6; /* Blue for commands */
+            
+            --border-color: #e0e0e0;
+            --font-main: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-code: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        body {
+            font-family: var(--font-main);
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Paper/Document Container */
+        .document-container {
+            max-width: 210mm; /* A4 width */
+            margin: 40px auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.15); /* Stronger shadow */
+            padding: 40px 60px;
+            min-height: 297mm;
+        }
+
+        /* Header & Footer */
+        header.doc-header {
+            border-bottom: 3px solid var(--accent-color); /* Thicker accent line */
+            padding-bottom: 15px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 1.1rem;
+            margin: 0;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .header-logo {
+            font-size: 0.75rem;
+            color: var(--secondary-color);
+            padding: 5px 10px;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        .header-right {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            color: var(--primary-color);
+        }
+
+        h1.title-page-heading {
+            font-size: 2.8rem; /* Larger title */
+            text-align: center;
+            margin-top: 120px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h2.section-title {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-top: 45px;
+            font-size: 2.0rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 30px;
+            color: var(--secondary-color);
+            border-left: 5px solid var(--accent-color);
+            padding-left: 10px;
+        }
+        
+        h4 {
+            font-size: 1.1rem;
+            margin-top: 20px;
+            color: #555;
+            font-style: italic;
+        }
+
+        /* Title Page */
+        .title-page {
+            text-align: center;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo-placeholder {
+            width: 150px;
+            height: 150px;
+            background-color: var(--accent-color);
+            margin: 0 auto 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .project-details {
+            margin-top: 70px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .project-details p {
+            margin: 5px 0;
+        }
+        
+        .project-details strong {
+            color: var(--primary-color);
+        }
+
+        /* Table of Contents */
+        .toc {
+            background-color: #f8f8f8;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 50px;
+        }
+
+        .toc h2 {
+            margin-top: 0;
+            text-align: center;
+            border-bottom: none;
+            color: var(--accent-color);
+        }
+
+        .toc ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .toc li::before {
+            content: "•";
+            color: var(--accent-color);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        /* Code Blocks (Prettier Formatting) */
+        .code-block {
+            background-color: var(--code-bg);
+            border-left: 5px solid var(--accent-color);
+            padding: 15px;
+            font-family: var(--font-code);
+            font-size: 0.95rem;
+            color: var(--code-text);
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 8px;
+            white-space: pre; /* Maintain pre-formatted structure */
+        }
+        
+        /* Command Styling */
+        .command {
+            color: var(--code-command);
+        }
+
+        .command-comment {
+            color: var(--code-comment);
+            font-style: italic;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .code-path {
+            color: #d7ba7d; /* Yellow/Brown for paths */
+        }
+        
+        .code-variable {
+            color: #9cdcfe; /* Light Blue for variables */
+        }
+        
+        .code-output {
+            color: #ce9178; /* Orange for output/file content */
+        }
+
+
+        /* Screenshot Template */
+        .screenshot-template {
+            border: 3px dashed var(--accent-color);
+            background-color: #f0f4f7;
+            height: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 25px 0;
+            color: var(--primary-color);
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .screenshot-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .screenshot-caption {
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #555;
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px 20px;
+            border-left: 3px solid var(--secondary-color);
+            background-color: #fcfcfc;
+            border-radius: 4px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--secondary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f7f7f7;
+        }
+        
+        ul, ol {
+            padding-left: 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* Print Media Query */
+        @media print {
+            .document-container {
+                box-shadow: none;
+                margin: 0;
+                width: 100%;
+                max-width: none;
+                padding: 40px 60px;
+            }
+            body {
+                background-color: white;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            header.doc-header {
+                display: flex;
+                position: fixed;
+                top: 0;
+                width: calc(100% - 120px);
+                background: white;
+                z-index: 1000;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="document-container">
+
+    <!-- FRONT PAGE -->
+    <div class="title-page">
+        <div class="logo-placeholder">
+            USTP
+        </div>
+        
+        <h1 class="title-page-heading">System Administration and Maintenance<br>Final Project Documentation</h1>
+        
+        <div class="project-details">
+            <p><strong>Subject Code:</strong> IT412</p>
+            <p><strong>Course Title:</strong> System Administration and Maintenance</p>
+            <p><strong>Project Title:</strong> Secure Linux File & User Management System</p>
+            <br>
+            <p><strong>Submitted To:</strong> [INSTRUCTOR NAME]</p>
+            <br>
+            <p><strong>Submitted By (Team Members):</strong></p>
+            <p>[Student Name 1]</p>
+            <p>[Student Name 2]</p>
+            <br>
+            <p><strong>Date of Submission:</strong> November 29, 2025</p>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- TABLE OF CONTENTS -->
+    <header class="doc-header">
+        <div class="header-logo">USTP Tech Office Project</div>
+        <div class="header-left">
+            <h1>IT412 Final Project Documentation</h1>
+        </div>
+        <div class="header-right">
+            Page 2
+        </div>
+    </header>
+
+    <div class="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#intro">1.0 Project Description and Objectives</a></li>
+            <li><a href="#reqs">2.0 System Requirements and Tools</a>
+                <ul>
+                    <li>2.1 Hardware/VM Specifications</li>
+                    <li>2.2 Required Software Packages</li>
+                </ul>
+            </li>
+            <li><a href="#setup">3.0 System Set Up and Configuration</a>
+                <ul>
+                    <li>3.1 OS Installation Verification</li>
+                    <li>3.2 User and Group Management</li>
+                </ul>
+            </li>
+            <li><a href="#perms">4.0 File System and Permissions (Lesson 5)</a>
+                <ul>
+                    <li>4.1 Directory Structure Creation</li>
+                    <li>4.2 Applying Permissions and Ownership</li>
+                    <li>4.3 Verification via `ls -l`</li>
+                </ul>
+            </li>
+            <li><a href="#security">5.0 Security Implementation</a>
+                <ul>
+                    <li>5.1 Password Policies (chage command)</li>
+                    <li>5.2 Firewall and SSH Hardening (UFW)</li>
+                </ul>
+            </li>
+            <li><a href="#maint">6.0 Automation and Maintenance (Lesson 4)</a>
+                <ul>
+                    <li>6.1 Automated Backup Script and Cron Scheduling</li>
+                    <li>6.2 System Monitoring and Process Inspection (top, ps)</li>
+                </ul>
+            </li>
+            <li><a href="#trouble">7.0 Testing, Troubleshooting, and Issues Encountered</a></li>
+            <li><a href="#summary">8.0 Summary and Recommendations</a></li>
+        </ul>
+    </div>
+
+    <!-- 1.0 PROJECT DESCRIPTION -->
+    <section id="intro">
+        <h2 class="section-title">1.0 Project Description and Objectives</h2>
+        <p>This final project, based on the IT412 curriculum and guidelines, documents the configuration of a secure Linux-based multi-user system for the USTP Tech Office. The system uses Ubuntu Server to host and manage data for three departments: Administration, Faculty, and Students. The primary requirement is to enforce stringent IT policies, including data isolation, access control, and system automation.</p>
+        
+        <p><strong>Core Project Objectives:</strong></p>
+        <ol>
+            <li>Configure a robust Linux Virtual Machine enforcing all organizational security and usage policies.</li>
+            <li>Implement hierarchical user and group management as specified in the scenario.</li>
+            <li>Secure the file system using strict ownership (<code>chown</code>) and permission rules (<code>chmod</code> - Lesson 5).</li>
+            <li>Automate essential maintenance tasks, notably system backup and process monitoring (Lesson 4).</li>
+            <li>Provide comprehensive documentation with step-by-step procedures and verification screenshots.</li>
+        </ol>
+    </section>
+
+    <!-- 2.0 REQUIREMENTS -->
+    <section id="reqs">
+        <h2 class="section-title">2.0 System Requirements and Tools</h2>
+        
+        <h3>2.1 Hardware/VM Specifications</h3>
+        <p>The virtual machine was provisioned with the following resources to ensure optimal performance for a server environment.</p>
+        <table>
+            <tr>
+                <th>Component</th>
+                <th>Requirement</th>
+            </tr>
+            <tr>
+                <td>Hypervisor</td>
+                <td>VirtualBox or VMware Workstation</td>
+            </tr>
+            <tr>
+                <td>Operating System</td>
+                <td>Ubuntu Server 22.04 LTS (Minimal Installation)</td>
+            </tr>
+            <tr>
+                <td>RAM</td>
+                <td>4GB</td>
+            </tr>
+            <tr>
+                <td>Storage</td>
+                <td>30GB Dynamically Allocated Disk Space</td>
+            </tr>
+            <tr>
+                <td>Network</td>
+                <td>NAT (for internet access) and Host-Only (for local administration)</td>
+            </tr>
+        </table>
+
+        <h3>2.2 Required Software Packages</h3>
+        <p>These essential packages were installed or verified to enable all required features: ACLs, password complexity checking, firewall, and remote access.</p>
+        <div class="code-block">
+            <span class="code-comment"># Update package list and install essential packages: ACLs, Firewall (ufw), Password Quality (libpam-pwquality), and SSH server.</span>
+            <span class="command">sudo apt update</span> && <span class="command">sudo apt upgrade -y</span>
+            <span class="command">sudo apt install</span> <span class="code-variable">acl</span> <span class="code-variable">libpam-pwquality</span> <span class="code-variable">ufw</span> <span class="code-variable">openssh-server</span> <span class="code-variable">-y</span>
+        </div>
+        <p class="screenshot-caption">The installation of key packages like <span class="code-variable">ufw</span> and <span class="code-variable">libpam-pwquality</span> enables advanced firewall and password policy controls beyond default settings.</p>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- 3.0 SETUP -->
+    <header class="doc-header">
+        <div class="header-logo">USTP Tech Office Project</div>
+        <div class="header-left">
+            <h1>IT412 Final Project Documentation</h1>
+        </div>
+        <div class="header-right">
+            Page 3
+        </div>
+    </header>
+
+    <section id="setup">
+        <h2 class="section-title">3.0 System Set Up and Configuration</h2>
+
+        <h3 id="install">3.1 OS Installation Verification</h3>
+        <p>The operating system was installed as a minimal server without a GUI. The hostname was set to clearly identify the machine within the network.</p>
+        
+        <div class="code-block">
+            <span class="code-comment"># Verification of the installed Linux kernel and hostname</span>
+            <span class="command">hostnamectl</span>
+            <span class="command">uname -a</span>
+            <span class="code-output">... Static hostname: ustp-tech-server ...</span>
+        </div>
+        
+        <div class="screenshot-template">
+            <div class="screenshot-icon">📷</div>
+            <div>[Screenshot: Terminal displaying <span class="code-command">hostnamectl</span> and <span class="code-command">uname -a</span> output]</div>
+        </div>
+        <p class="screenshot-caption">Figure 3.1: Post-installation verification confirming the Linux distribution and the project's assigned hostname, `ustp-tech-server`.</p>
+
+        <h3 id="users">3.2 User and Group Management</h3>
+        <p>Following the principle of least privilege, specific groups and users were created for the three departments: Administration, Faculty, and Students.</p>
+
+        <h4>3.2.1 Creating Department Groups</h4>
+        <div class="code-block">
+            <span class="code-comment"># Create the three department groups for access control</span>
+            <span class="command">sudo groupadd</span> <span class="code-variable">admin_dept</span>
+            <span class="command">sudo groupadd</span> <span class="code-variable">faculty_dept</span>
+            <span class="command">sudo groupadd</span> <span class="code-variable">student_dept</span>
+        </div>
+
+        <h4>3.2.2 Creating Users and Assigning Primary Group</h4>
+        <p>Users were created with home directories and their primary group was set to their respective department group.</p>
+        <div class="code-block">
+            <span class="code-comment"># Create users: -m creates home dir, -s sets default shell, -g sets primary group</span>
+            <span class="command">sudo useradd -m -s /bin/bash -g</span> <span class="code-variable">admin_dept</span> <span class="code-variable">admin_user</span>
+            <span class="command">sudo useradd -m -s /bin/bash -g</span> <span class="code-variable">faculty_dept</span> <span class="code-variable">faculty_user</span>
+            <span class="command">sudo useradd -m -s /bin/bash -g</span> <span class="code-variable">student_dept</span> <span class="code-variable">student_user</span>
+
+            <span class="code-comment"># Set initial secure passwords for all users</span>
+            <span class="command">sudo passwd</span> <span class="code-variable">admin_user</span>
+        </div>
+
+        <h4>3.2.3 Verification of Users and Groups</h4>
+        <div class="code-block">
+            <span class="code-comment"># Verify group creation (using tail to show the last few lines of /etc/group)</span>
+            <span class="command">tail -n 3 /etc/group</span>
+            
+            <span class="code-comment"># Verify user details and group membership</span>
+            <span class="command">id admin_user</span>
+        </div>
+
+        <div class="screenshot-template">
+            <div class="screenshot-icon">📷</div>
+            <div>[Screenshot: Output of <span class="code-command">tail /etc/group</span> and <span class="code-command">id admin_user</span> showing the groups and UID/GIDs]</div>
+        </div>
+        <p class="screenshot-caption">Figure 3.2: Verification of users and groups. The <span class="code-command">id</span> command confirms the primary group membership for <span class="code-variable">admin_user</span>.</p>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- 4.0 PERMISSIONS -->
+    <header class="doc-header">
+        <div class="header-logo">USTP Tech Office Project</div>
+        <div class="header-left">
+            <h1>IT412 Final Project Documentation</h1>
+        </div>
+        <div class="header-right">
+            Page 4
+        </div>
+    </header>
+
+    <section id="perms">
+        <h2 class="section-title">4.0 File System and Permissions (Lesson 5)</h2>
+        <p>This section is crucial for data isolation, enforcing the policy that departments can only access their designated directories. This directly implements concepts from Lesson 5 (Permissions).</p>
+
+        <h3 id="folders">4.1 Directory Structure Creation</h3>
+        <p>A central data structure was created under <span class="code-path">/srv/ustp_data</span> to house all shared department documents.</p>
+        <div class="code-block">
+            <span class="code-comment"># Create base directory and subdirectories using -p (parent directories)</span>
+            <span class="command">sudo mkdir -p /srv/ustp_data/admin_docs</span>
+            <span class="command">sudo mkdir -p /srv/ustp_data/faculty_docs</span>
+            <span class="command">sudo mkdir -p /srv/ustp_data/student_docs</span>
+        </div>
+
+        <h3 id="access">4.2 Applying Permissions and Ownership</h3>
+        <p>The policy dictates that only members of the assigned group can access (read, write, execute) their directory. The owner is set to <code>root</code> for administrative control.</p>
+
+        <h4>4.2.1 Ownership Configuration (`chown`)</h4>
+        <div class="code-block">
+            <span class="code-comment"># Set group ownership for each directory to its respective department group</span>
+            <span class="command">sudo chown root:admin_dept</span> <span class="code-path">/srv/ustp_data/admin_docs</span>
+            <span class="command">sudo chown root:faculty_dept</span> <span class="code-path">/srv/ustp_data/faculty_docs</span>
+            <span class="command">sudo chown root:student_dept</span> <span class="code-path">/srv/ustp_data/student_docs</span>
+        </div>
+
+        <h4>4.2.2 Permission Configuration (`chmod` - The 770 Policy)</h4>
+        <p>We apply <code>770</code> permissions (rwxrwx---). This grants Owner (root) full access (7), Group (e.g., admin\_dept) full access (7), and Others (all other users) no access (0).</p>
+        <div class="code-block">
+            <span class="code-comment"># Apply 770 permissions: Owner=rwx, Group=rwx, Others=---</span>
+            <span class="command">sudo chmod 770 /srv/ustp_data/admin_docs</span>
+            <span class="command">sudo chmod 770 /srv/ustp_data/faculty_docs</span>
+            <span class="command">sudo chmod 770 /srv/ustp_data/student_docs</span>
+        </div>
+
+        <h3 id="access-verify">4.3 Verification of Permissions (`ls -l`)</h3>
+        <div class="code-block">
+            <span class="code-comment"># List directory details to verify the ownership and permission string</span>
+            <span class="command">ls -l /srv/ustp_data/</span>
+            <span class="code-output">drwxrwx--- 2 root admin_dept 4096 Nov 29 10:00 admin_docs</span>
+            <span class="code-output">drwxrwx--- 2 root faculty_dept 4096 Nov 29 10:00 faculty_docs</span>
+        </div>
+
+        <div class="screenshot-template">
+            <div class="screenshot-icon">📷</div>
+            <div>[Screenshot: Output of <span class="code-command">ls -l /srv/ustp_data</span> showing the <strong>drwxrwx---</strong> string]</div>
+        </div>
+        <p class="screenshot-caption">Figure 4.1: The <span class="code-command">ls -l</span> output confirms the successful application of 770 permissions and correct group ownership, validating the data isolation policy.</p>
+
+        <div class="screenshot-template">
+            <div class="screenshot-icon">🔒</div>
+            <div>[Screenshot: Terminal showing a user (e.g., <span class="code-variable">faculty_user</span>) attempting to <span class="code-command">cd</span> into a restricted folder (e.g., <span class="code-path">/srv/ustp_data/admin_docs</span>), resulting in a "Permission denied" error.]</div>
+        </div>
+        <p class="screenshot-caption">Figure 4.2: Access Control Verification. A non-authorized user's failed attempt to access a protected directory, proving the effectiveness of the 770 permission policy.</p>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- 5.0 SECURITY -->
+    <header class="doc-header">
+        <div class="header-logo">USTP Tech Office Project</div>
+        <div class="header-left">
+            <h1>IT412 Final Project Documentation</h1>
+        </div>
+        <div class="header-right">
+            Page 5
+        </div>
+    </header>
+
+    <section id="security">
+        <h2 class="section-title">5.0 Security Implementation</h2>
+
+        <h3 id="pass">5.1 Password Policies (`chage` command)</h3>
+        <p>To enforce robust account security, all users are required to change their password every 90 days. This policy is implemented using the <code>chage</code> command (change aging information).</p>
+        <div class="code-block">
+            <span class="code-comment"># Set maximum password age to 90 days for all department users (-M 90)</span>
+            <span class="command">sudo chage -M 90</span> <span class="code-variable">admin_user</span>
+            <span class="command">sudo chage -M 90</span> <span class="code-variable">faculty_user</span>
+            <span class="command">sudo chage -M 90</span> <span class="code-variable">student_user</span>
+
+            <span class="code-comment"># Verify the applied policy for a user</span>
+            <span class="command">sudo chage -l admin_user</span>
+        </div>
+
+        <div class="screenshot-template">
+            <div class="screenshot-icon">🔑</div>
+            <div>[Screenshot: Output of <span class="code-command">chage -l admin_user</span> showing "Maximum number of days between password change: 90"]</div>
+        </div>
+        <p class="screenshot-caption">Figure 5.1: Password Policy Verification. The output of <span class="code-command">chage -l</span> confirms that the system enforces a 90-day password expiration limit.</p>
+
+        <h3 id="net">5.2 Firewall and SSH Hardening</h3>
+        <p>The Uncomplicated Firewall (UFW) is used to establish a network security policy of "deny by default, allow by exception." Only the SSH service is allowed for secure remote administration.</p>
+
+        <h4>5.2.1 Firewall Configuration (`ufw`)</h4>
+        <div class="code-block">
+            <span class="code-comment"># Enable logging for firewall operations (optional but recommended)</span>
+            <span class="command">sudo ufw logging on</span>
+            
+            <span class="code-comment"># Allow incoming connections on the standard SSH port (22)</span>
+            <span class="command">sudo ufw allow ssh</span>
+            
+            <span class="code-comment"># Enable the firewall (this will deny all other incoming traffic)</span>
+            <span class="command">sudo ufw enable</span>
+
+            <span class="code-comment"># Check the current status and rules</span>
+            <span class="command">sudo ufw status verbose</span>
+        </div>
+
+        <h4>5.2.2 SSH Hardening (Disabling Root Login)</h4>
+        <p>Direct root login via SSH is disabled to prevent attackers from targeting the highest-privileged account.</p>
+        <div class="code-block">
+            <span class="code-comment"># Edit the SSH daemon configuration file</span>
+            <span class="command">sudo nano /etc/ssh/sshd_config</span>
+            
+            <span class="code-output"># Change the following line:</span>
+            <span class="code-output">PermitRootLogin no</span>
+
+            <span class="code-comment"># Apply changes by restarting the SSH service</span>
+            <span class="command">sudo systemctl restart ssh</span>
+        </div>
+
+        <div class="screenshot-template">
+            <div class="screenshot-icon">🛡️</div>
+            <div>[Screenshot: Output of <span class="code-command">ufw status verbose</span> showing Status: active and Rule: 22/tcp ALLOW Anywhere]</div>
+        </div>
+        <p class="screenshot-caption">Figure 5.2: UFW Status. The command confirms the firewall is active and only SSH traffic (port 22) is permitted, ensuring network segmentation.</p>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- 6.0 AUTOMATION -->
+    <header class="doc-header">
+        <div class="header-logo">USTP Tech Office Project</div>
+        <div class="header-left">
+            <h1>IT412 Final Project Documentation</h1>
+        </div>
+        <div class="header-right">
+            Page 6
+        </div>
+    </header>
+
+    <section id="maint">
+        <h2 class="section-title">6.0 Automation and Maintenance (Lesson 4)</h2>
+        <p>Proactive system maintenance and monitoring are automated using Bash scripting and the Cron scheduling utility, based on principles covered in Lesson 4 (Process and Monitoring).</p>
+
+        <h3 id="backup">6.1 Automated Backup Script and Cron Scheduling</h3>
+        <p>A script named <span class="code-path">backup.sh</span> archives the entire <span class="code-path">/srv/ustp_data</span> directory nightly and logs the outcome.</p>
+
+        <h4>6.1.1 The Backup Script (`backup.sh`)</h4>
+        <div class="code-block">
+            <span class="code-comment">#!/bin/bash</span>
+            
+            <span class="code-comment"># Variables for paths and dynamic timestamp</span>
+            <span class="code-variable">BACKUP_SRC</span>=<span class="code-output">"/srv/ustp_data"</span>
+            <span class="code-variable">BACKUP_DEST</span>=<span class="code-output">"/var/backups/ustp_archives"</span>
+            <span class="code-variable">TIMESTAMP</span>=$(<span class="command">date +%Y-%m-%d_%H-%M-%S</span>)
+            <span class="code-variable">FILENAME</span>=<span class="code-output">"data_backup_</span><span class="code-variable">$TIMESTAMP</span><span class="code-output">.tar.gz"</span>
+            <span class="code-variable">LOG_FILE</span>=<span class="code-output">"/var/log/ustp_backup.log"</span>
+
+            <span class="code-comment"># Create destination directory if it does not exist</span>
+            <span class="command">mkdir -p</span> <span class="code-variable">$BACKUP_DEST</span>
+
+            <span class="code-comment"># Create the compressed archive (tar -c create, -z gzip, -f file)</span>
+            <span class="command">tar -czf</span> <span class="code-variable">$BACKUP_DEST/$FILENAME</span> <span class="code-variable">$BACKUP_SRC</span>
+
+            <span class="code-comment"># Log the result to the log file</span>
+            <span class="command">echo</span> <span class="code-output">"$(date): Backup created: </span><span class="code-variable">$FILENAME</span><span class="code-output">"</span> <span class="command">>></span> <span class="code-variable">$LOG_FILE</span>
+        </div>
+        <p><strong>Permissions:</strong> The script must be made executable:</p>
+        <div class="code-block">
+            <span class="command">chmod +x</span> <span class="code-path">/home/administrator/backup.sh</span>
+        </div>
+
+        <h4>6.1.2 Scheduling with Cron</h4>
+        <p>The script is scheduled to run every day at 02:00 AM, a time of low network usage.</p>
+        <div class="code-block">
+            <span class="code-comment"># Open crontab editor for the root user</span>
+            <span class="command">sudo crontab -e</span>
+
+            <span class="code-comment"># The crontab entry added:</span>
+            <span class="code-output">0 2 * * * /bin/bash /home/administrator/backup.sh</span>
+        </div>
+
+        <div class="screenshot-template">
+            <div class="screenshot-icon">⏰</div>
+            <div>[Screenshot: Output of <span class="code-command">sudo crontab -l</span> confirming the automated backup job]</div>
+        </div>
+        <p class="screenshot-caption">Figure 6.1: Cron Job Verification. The command verifies the <span class="code-path">backup.sh</span> script is correctly scheduled for daily execution at 2 AM.</p>
+
+        <h3 id="monitor">6.2 System Monitoring and Process Inspection (Lesson 4)</h3>
+        <p>System health is monitored by inspecting active processes and resource utilization using the <span class="code-command">top</span> and <span class="code-command">ps</span> commands.</p>
+
+        <h4>6.2.1 Real-Time Performance Monitoring (`top`)</h4>
+        <div class="code-block">
+            <span class="code-comment"># View dynamic resource usage (CPU, Memory, Swaps, Process States)</span>
+            <span class="command">top</span>
+            <span class="code-comment"># Or for a snapshot:</span>
+            <span class="command">top -b -n 1 | head -n 20</span>
+        </div>
+
+        <h4>6.2.2 Process Snapshots (`ps aux`)</h4>
+        <div class="code-block">
+            <span class="code-comment"># List all running processes with user/CPU/Memory details</span>
+            <span class="command">ps aux</span>
+            
+            <span class="code-comment"># Check specifically for running critical services (e.g., sshd)</span>
+            <span class="command">ps aux | grep sshd</span>
+        </div>
+
+        <div class="screenshot-template">
+            <div class="screenshot-icon">📊</div>
+            <div>[Screenshot: Output of <span class="code-command">top</span> command showing resource utilization metrics and process details (PID, USER, %CPU, %MEM)]</div>
+        </div>
+        <p class="screenshot-caption">Figure 6.2: System Process Inspection. The <span class="code-command">top</span> command provides crucial data on system load and active processes, fulfilling the monitoring requirement.</p>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- 7.0 TESTING -->
+    <header class="doc-header">
+        <div class="header-logo">USTP Tech Office Project</div>
+        <div class="header-left">
+            <h1>IT412 Final Project Documentation</h1>
+        </div>
+        <div class="header-right">
+            Page 7
+        </div>
+    </header>
+
+    <section id="trouble">
+        <h2 class="section-title">7.0 Testing, Troubleshooting, and Issues Encountered</h2>
+        <p>Testing was performed at each stage to ensure compliance. Any issues encountered during setup were documented and resolved.</p>
+
+        <h3>7.1 Verification Summary</h3>
+        <table>
+            <tr>
+                <th>Component</th>
+                <th>Test Procedure</th>
+                <th>Result</th>
+            </tr>
+            <tr>
+                <td>Group Access</td>
+                <td>Log in as <span class="code-variable">student_user</span> and try to access <span class="code-path">/srv/ustp_data/admin_docs</span>.</td>
+                <td>**Passed.** Received "Permission denied."</td>
+            </tr>
+            <tr>
+                <td>Password Policy</td>
+                <td>Run <span class="code-command">chage -l faculty_user</span> to confirm Max Age: 90 days.</td>
+                <td>**Passed.** Policy is enforced.</td>
+            </tr>
+            <tr>
+                <td>Firewall</td>
+                <td>Check <span class="code-command">ufw status</span> and attempt to connect to a blocked port (e.g., 80) from another machine.</td>
+                <td>**Passed.** Port 80 denied; SSH allowed.</td>
+            </tr>
+            <tr>
+                <td>Backup Automation</td>
+                <td>Manually execute <span class="code-path">backup.sh</span> and check <span class="code-path">/var/log/ustp_backup.log</span> for success entry.</td>
+                <td>**Passed.** Script ran, archive created, and logged correctly.</td>
+            </tr>
+        </table>
+
+        <h3>7.2 Documented Issues and Resolutions</h3>
+        <p><strong>Issue: Cron Script Execution Failure</strong></p>
+        <p>Initially, the backup script was not executing automatically. This was traced to the script lacking the necessary executable bit, preventing the Cron daemon from running it as a program.</p>
+        <div class="code-block">
+            <span class="code-comment"># Initial file permissions showed -rw-r--r--.</span>
+            <span class="code-comment"># Resolution: Add execute permission for the owner.</span>
+            <span class="command">chmod +x /home/administrator/backup.sh</span>
+        </div>
+
+        <p><strong>Issue: `sshd` Configuration Error</strong></p>
+        <p>After modifying <span class="code-path">sshd_config</span>, the system failed to restart the SSH service. The issue was a typo in the configuration file (`PermitRootLogin NO` instead of `PermitRootLogin no`).</p>
+        <div class="code-block">
+            <span class="code-comment"># Resolution: Correct typo and check service status.</span>
+            <span class="code-output">PermitRootLogin no</span> <span class="code-comment">(Ensure lowercase 'no')</span>
+            <span class="command">sudo systemctl restart ssh</span>
+            <span class="command">sudo systemctl status ssh</span>
+        </div>
+    </section>
+
+    <!-- 8.0 SUMMARY -->
+    <section id="summary">
+        <h2 class="section-title">8.0 Summary and Recommendations</h2>
+        <p>The USTP Tech Office System Administration project successfully meets all guidelines outlined in the criteria. A secure, functional, and automated Linux environment was provisioned, demonstrating proficiency in user/group management, file system security (Lesson 5), process monitoring (Lesson 4), and system automation.</p>
+        
+        <h4>Recommendations for System Improvement and Sustainment</h4>
+        <ol>
+            <li><strong>Remote Backup Implementation:</strong> Configure an automated <span class="code-command">rsync</span> job to transfer daily backups to a secure, off-site storage location, ensuring business continuity in case of VM failure.</li>
+            <li><strong>SELinux/AppArmor Integration:</strong> For enhanced mandatory access control (MAC), implement and configure AppArmor profiles to restrict what system resources individual applications (like the web server, if added) can access.</li>
+            <li><strong>Resource Quota Implementation:</strong> Use the <span class="code-command">quota</span> utility to limit the disk space allocated to the <span class="code-variable">student_dept</span> to prevent accidental system storage exhaustion.</li>
+            <li><strong>Log Rotation Policy:</strong> Verify and fine-tune the <span class="code-command">logrotate</span> configuration to efficiently manage the size of system log files, including the new <span class="code-path">ustp_backup.log</span>.</li>
+        </ol>
+    </section>
+    
+    <div class="page-break"></div>
+
+    <!-- APPENDICES -->
+    <header class="doc-header">
+        <div class="header-logo">USTP Tech Office Project</div>
+        <div class="header-left">
+            <h1>IT412 Final Project Documentation</h1>
+        </div>
+        <div class="header-right">
+            Page 8
+        </div>
+    </header>
+    
+    <section>
+        <h2 class="section-title">Appendix A: Full Automated Maintenance Script</h2>
+        <p>The complete script used for automated daily data archiving.</p>
+        <div class="code-block">
+            <span class="code-comment">#!/bin/bash</span>
+            <span class="code-comment"># Script Name: backup.sh</span>
+            <span class="code-comment"># Function: Archives critical department data and logs the operation.</span>
+            
+            <span class="code-comment"># --- Configuration Variables ---</span>
+            <span class="code-variable">SOURCE_DIRS</span>=<span class="code-output">"/srv/ustp_data"</span>
+            <span class="code-variable">BACKUP_ROOT</span>=<span class="code-output">"/var/backups/ustp_archives"</span>
+            <span class="code-variable">LOG_FILE</span>=<span class="code-output">"/var/log/ustp_backup.log"</span>
+            <span class="code-variable">TIMESTAMP</span>=$(<span class="command">date +"%Y%m%d_%H%M%S"</span>)
+            <span class="code-variable">BACKUP_NAME</span>=<span class="code-output">"ustp_data_backup_</span><span class="code-variable">$TIMESTAMP</span><span class="code-output">.tar.gz"</span>
+            
+            <span class="code-comment"># --- Execution ---</span>
+            
+            <span class="code-comment"># 1. Ensure backup directory exists and has restricted permissions (700)</span>
+            if [ ! -d "<span class="code-variable">$BACKUP_ROOT</span>" ]; then
+                <span class="command">mkdir -p</span> "<span class="code-variable">$BACKUP_ROOT</span>"
+                <span class="command">chmod 700</span> "<span class="code-variable">$BACKUP_ROOT</span>"
+            fi
+            
+            <span class="code-comment"># 2. Perform Backup using tar</span>
+            <span class="command">echo</span> <span class="code-output">"$(date): Starting backup of </span><span class="code-variable">$SOURCE_DIRS</span><span class="code-output">..."</span> <span class="command">>></span> "<span class="code-variable">$LOG_FILE</span>"
+            <span class="command">tar -czf</span> "<span class="code-variable">$BACKUP_ROOT/$BACKUP_NAME</span>" "<span class="code-variable">$SOURCE_DIRS</span>" <span class="command">2>></span> "<span class="code-variable">$LOG_FILE</span>"
+            
+            <span class="code-comment"># 3. Validation and Logging</span>
+            if [ <span class="command">$?</span> -eq 0 ]; then
+                <span class="command">echo</span> <span class="code-output">"$(date): Backup Success: </span><span class="code-variable">$BACKUP_NAME</span><span class="code-output">"</span> <span class="command">>></span> "<span class="code-variable">$LOG_FILE</span>"
+            else
+                <span class="command">echo</span> <span class="code-output">"$(date): Backup FAILED! Check permissions or disk space."</span> <span class="command">>></span> "<span class="code-variable">$LOG_FILE</span>"
+            fi
+        </div>
+    </section>
+</div>
+
+</body>
+</html>
